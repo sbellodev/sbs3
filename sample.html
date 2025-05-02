@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tournaments Manager</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        .tournament { margin: 10px 0; padding: 10px; border: 1px solid #ddd; }
+        button { margin-left: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Tournaments</h1>
+    
+    <!-- Create Form -->
+    <div>
+        <input id="name" placeholder="Name">
+        <input id="date" type="date" placeholder="Date">
+        <input id="location" placeholder="Location">
+        <button onclick="createTournament()">Add</button>
+    </div>
+
+    <!-- List -->
+    <div id="tournaments"></div>
+
+    <script>
+        // Fetch and display tournaments
+        async function loadTournaments() {
+            const res = await fetch('http://localhost/sbs3/backend/tournaments');
+            const { data } = await res.json();
+            document.getElementById('tournaments').innerHTML = data.map(t => `
+                <div class="tournament" data-id="${t.id}">
+                    ${t.name} (${t.date}, ${t.location})
+                    <button onclick="deleteTournament(${t.id})">Delete</button>
+                </div>
+            `).join('');
+        }
+
+        // Create tournament
+        async function createTournament() {
+            const name = document.getElementById('name').value;
+            const date = document.getElementById('date').value;
+            const location = document.getElementById('location').value;
+            
+            await fetch('http://localhost/sbs3/backend/tournaments', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, date, location })
+            });
+            
+            loadTournaments(); // Refresh list
+        }
+
+        // Delete tournament
+        async function deleteTournament(id) {
+            await fetch(`http://localhost/sbs3/backend/tournaments?id=${id}`, {
+                method: 'DELETE'
+            });
+            loadTournaments(); // Refresh list
+        }
+
+        // Load on startup
+        loadTournaments();
+    </script>
+</body>
+</html>
