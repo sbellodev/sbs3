@@ -1,13 +1,21 @@
 <?php
 // Enable debugging
 require_once __DIR__ . '/config/logger.php';
-
+header("Access-Control-Allow-Origin: http://localhost:3000"); // Your React port
+header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Max-Age: 3600");
 header("Content-Type: application/json");
 header("Access-Control-Allow-Origin: *");
+
 
 try {
     require_once __DIR__ . '/config/database.php';
     require_once __DIR__ . '/models/TournamentModel.php';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        exit;
+    }
 
     $method = $_SERVER['REQUEST_METHOD'];
     $model = new TournamentModel();
