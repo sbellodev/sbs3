@@ -1,6 +1,9 @@
 RewriteEngine On
 RewriteBase /sbs3/backend/
 
+# Prevent looping on api.php itself
+RewriteCond %{REQUEST_URI} !api\.php [NC]
+
 # Don't rewrite existing files or directories
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

@@ -14,6 +14,7 @@ A new version of SmashBrosSpain web app built with React and PHP.
 - [ ] Frontend - Visual Mockup of Gacha (only index)
 - [ ] Backend  - BBDD - Add entities UserProfile, TournamentSets
 - [ ] Backend  - BBDD - Add entities News
+- [ ] Backend -  Code - Error control (duplicated inserted email in users etc...)
 - [ ] Backend -  Code - Implement user roles/permissions
 - More in future (admin page, emails, gacha points...)
 
