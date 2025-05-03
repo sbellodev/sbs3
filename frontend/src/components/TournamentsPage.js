@@ -32,10 +32,7 @@ const TournamentsPage = () => {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/tournaments`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...newTournament,
-          location_id: newTournament.location // Send location_id to backend
-        })
+        body: JSON.stringify(newTournament)
       });
       if (!response.ok) throw new Error('Network response was not ok');
       setNewTournament({ name: '', date: '', location: '1' });
@@ -67,7 +64,7 @@ const TournamentsPage = () => {
     <div className="general-page">
       <h1>Manage CRUD Tournaments</h1>
       
-      <form onSubmit={handleSubmit} className="general-form">
+      <form onSubmit={handleSubmit} className="tournament-form">
         <input
           type="text"
           name="name"
@@ -100,7 +97,7 @@ const TournamentsPage = () => {
 
       <div className="general-grid">
         {tournaments.map(({ id, name, date, location }) => (
-          <div key={id} className="general-card">
+          <div key={id} className="tournament-card">
             <h3>{name}</h3>
             <p>Date: {new Date(date).toLocaleDateString()}</p>
             <p>Location: {locations.find(l => l.id === location)?.name || location}</p>
