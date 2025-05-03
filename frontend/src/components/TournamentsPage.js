@@ -62,7 +62,7 @@ const TournamentsPage = () => {
 
   return (
     <div className="general-page">
-      <h1>Manage CRUD Tournaments</h1>
+      <h1>Manage Tournaments</h1>
       
       <form onSubmit={handleSubmit} className="tournament-form">
         <input

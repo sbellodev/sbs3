@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TournamentsPage from './components/TournamentsPage';
+import TestsPage from './components/TestsPage';
 import AuthPage from './components/AuthPage';
 import './App.css';
 import UsersPage from './components/UserPage';
@@ -58,6 +59,12 @@ function App() {
               CRUD Users
             </button>
             <button 
+              className={`nav-btn ${currentPage === 'tests' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('tests')}
+            >
+              API Tests
+            </button>
+            <button 
               className="nav-btn logout-btn"
               onClick={handleLogout}
             >
@@ -81,6 +88,8 @@ function App() {
           <HomePage />
         ) : currentPage === 'tournaments' ? (
           <TournamentsPage user={user} />
+        ) : currentPage === 'tests' ? (
+          <TestsPage user={user} />
         ) : currentPage === 'users' ? (
           <UsersPage user={user} />
         ) : (
