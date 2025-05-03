@@ -28,6 +28,7 @@ const TournamentsPage = () => {
       const { data } = await response.json();
       setTournaments(data || []);
     } catch (error) {
+      console.error('Error:', error.message);
       setError(error.message);
     }
   };
@@ -60,6 +61,7 @@ const TournamentsPage = () => {
       setNewTournament({ name: '', date: '', location: '1' });
       await fetchTournaments();
     } catch (error) {
+      console.error('Error:', error.message);
       setError(error.message);
     }
   };
@@ -79,6 +81,7 @@ const TournamentsPage = () => {
       setSuccess('Tournament deleted successfully!');
       setTournaments(tournaments.filter(t => t.id !== id));
     } catch (error) {
+      console.error('Error:', error.message);
       setError(error.message);
     }
   };

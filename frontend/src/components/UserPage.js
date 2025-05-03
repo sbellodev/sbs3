@@ -29,6 +29,7 @@ const UsersPage = () => {
       const { data } = await response.json();
       setUsers(data || []);
     } catch (error) {
+      console.error('Error:', error.message);
       setError(`Failed to load users: ${error.message}`);
     }
   };
@@ -63,6 +64,7 @@ const UsersPage = () => {
       setNewUser({ username: '', email: '', role: 'user' });
       await fetchUsers();
     } catch (error) {
+      console.error('Error:', error.message);
       setError(error.message);
     }
   };
@@ -82,6 +84,7 @@ const UsersPage = () => {
       setSuccess('User deleted successfully!');
       setUsers(users.filter(u => u.id !== id));
     } catch (error) {
+      console.error('Error:', error.message);
       setError(`Failed to delete user: ${error.message}`);
     }
   };
