@@ -11,7 +11,7 @@ function App() {
 
   // Fetch tournaments from PHP backend
   useEffect(() => {
-    fetch('http://localhost/sbs3/backend/tournaments')
+    fetch(process.env.REACT_APP_API_URL + '/tournaments')
       .then(response => response.json())
       .then(data => setTournaments(data.data))
       .catch(error => console.error('Error:', error));
@@ -26,7 +26,7 @@ function App() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetch('http://localhost/sbs3/backend/tournaments', {
+    fetch(process.env.REACT_APP_API_URL + '/tournaments', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -36,14 +36,14 @@ function App() {
     .then(response => response.json())
     .then(data => {
       // Refresh tournament list
-      fetch('http://localhost/sbs3/backend/tournaments')
+      fetch(process.env.REACT_APP_API_URL + '/tournaments')
         .then(response => response.json())
         .then(data => setTournaments(data.data));
     });
   };
 
   const handleDelete = (id) => {
-    fetch(`http://localhost/sbs3/backend/tournaments?id=${id}`, {
+    fetch(`${process.env.REACT_APP_API_URL}/tournaments?id=${id}`, {
       method: 'DELETE'
     })
     .then(() => {
