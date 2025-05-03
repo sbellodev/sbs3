@@ -6,65 +6,113 @@ const UsersPage = () => {
   const [newUser, setNewUser] = useState({ 
     username: '', 
     email: '', 
-    role: 'user' // Default role
+    role: 'user'
   });
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-  // Mock roles data
   const roles = [
     { id: 'user', name: 'User' },
     { id: 'admin', name: 'Admin' }
   ];
 
-  useEffect(() => { fetchUsers(); }, []);
+  useEffect(() => { 
+    fetchUsers(); 
+  }, []);
 
   const fetchUsers = async () => {
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/users`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
       const { data } = await response.json();
       setUsers(data || []);
     } catch (error) {
-      console.error('Error fetching users:', error);
+      setError(`Failed to load users: ${error.message}`);
     }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewUser(prev => ({ ...prev, [name]: value }));
+    // Clear errors when user starts typing
+    if (error) setError(null);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+    setSuccess(null);
+    
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newUser)
       });
-      if (!response.ok) throw new Error('Network response was not ok');
+
+      const result = await response.json();
+      
+      if (!response.ok) {
+        // Handle API validation errors
+        throw new Error(result.error || 'Failed to create user');
+      }
+
+      setSuccess('User created successfully!');
       setNewUser({ username: '', email: '', role: 'user' });
       await fetchUsers();
     } catch (error) {
-      console.error('Error adding user:', error);
+      setError(error.message);
     }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
+    
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/users?id=${id}`, {
         method: 'DELETE'
       });
-      if (!response.ok) throw new Error('Delete failed');
+
+      if (!response.ok) {
+        throw new Error('Delete failed');
+      }
+
+      setSuccess('User deleted successfully!');
       setUsers(users.filter(u => u.id !== id));
     } catch (error) {
-      console.error('Error deleting user:', error);
+      setError(`Failed to delete user: ${error.message}`);
     }
   };
+
+  // Auto-dismiss messages after 5 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setError(null);
+      setSuccess(null);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [error, success]);
 
   return (
     <div className="general-page">
       <h1>Manage Users</h1>
       
+      {/* Success/Error Messages */}
+      {error && (
+        <div className="alert error">
+          <span className="close-btn" onClick={() => setError(null)}>&times;</span>
+          {error}
+        </div>
+      )}
+      {success && (
+        <div className="alert success">
+          <span className="close-btn" onClick={() => setSuccess(null)}>&times;</span>
+          {success}
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="general-form">
         <input
           type="text"

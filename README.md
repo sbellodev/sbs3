@@ -71,6 +71,9 @@ MIT
 3. Configure frontend to point to your API
 4. `npm start` to run React dev server
 
+## FAQ
+- Inserts en DB no funcionan en PRO
+  - Revisar la tech usada en la dB (Mysql, Postgresql)... y SET FOREIGN_KEY_CHECKS = 0 o 1;
 ## License
 
 MIT

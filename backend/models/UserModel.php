@@ -41,7 +41,7 @@ class UserModel
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (Exception $e) {
             logError($e->getMessage());
-            throw new Exception("Failed to fetch users");
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -62,7 +62,7 @@ class UserModel
             return $result->fetch_assoc();
         } catch (Exception $e) {
             logError($e->getMessage());
-            throw new Exception("Failed to fetch user");
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -76,13 +76,16 @@ class UserModel
 
             $stmt->bind_param("sss", $data['username'], $data['email'], $data['role']);
             if (!$stmt->execute()) {
+                if ($this->conn->errno === 1062) { // MySQL duplicate entry error code
+                    throw new Exception("Email address already exists");
+                }
                 throw new Exception("Execute failed: " . $stmt->error);
             }
 
             return $this->getUserById($this->conn->insert_id);
         } catch (Exception $e) {
             logError($e->getMessage());
-            throw new Exception("Failed to create user");
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -107,7 +110,7 @@ class UserModel
             return $user;
         } catch (Exception $e) {
             logError($e->getMessage());
-            throw new Exception("Failed to delete user");
+            throw new Exception($e->getMessage());
         }
     }
 }

@@ -28,7 +28,7 @@ class TournamentModel
             return $result->fetch_all(MYSQLI_ASSOC);
         } catch (Exception $e) {
             logError($e->getMessage());
-            throw new Exception("Failed to fetch tournaments");
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -49,7 +49,7 @@ class TournamentModel
             return $result->fetch_assoc();
         } catch (Exception $e) {
             logError($e->getMessage());
-            throw new Exception("Failed to fetch tournament");
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ class TournamentModel
             return $this->getTournamentById($this->conn->insert_id);
         } catch (Exception $e) {
             logError($e->getMessage());
-            throw new Exception("Failed to create tournament");
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -89,7 +89,7 @@ class TournamentModel
             return $this->getTournamentById($id);
         } catch (Exception $e) {
             logError($e->getMessage());
-            throw new Exception("Failed to update tournament");
+            throw new Exception($e->getMessage());
         }
     }
 
@@ -115,7 +115,7 @@ class TournamentModel
             return $tournament;
         } catch (Exception $e) {
             logError($e->getMessage());
-            throw new Exception("Failed to delete tournament");
+            throw new Exception($e->getMessage());
         }
     }
 }
