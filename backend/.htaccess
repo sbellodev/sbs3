@@ -1,5 +1,9 @@
 RewriteEngine On
-RewriteBase /sbs3/backend/
+
+# Handle both local and production environments
+RewriteCond %{REQUEST_URI} ^/sbs3/backend [OR]
+RewriteCond %{REQUEST_URI} ^/backend
+RewriteRule ^ - [E=BASE:%{REQUEST_URI}]
 
 # Prevent looping on api.php itself
 RewriteCond %{REQUEST_URI} !api\.php [NC]
@@ -8,5 +12,5 @@ RewriteCond %{REQUEST_URI} !api\.php [NC]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 
-# Rewrite all requests to api.php except root
+# Rewrite all requests to api.php
 RewriteRule ^(.*)$ api.php?path=$1 [QSA,L]
