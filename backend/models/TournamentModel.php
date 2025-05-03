@@ -56,7 +56,7 @@ class TournamentModel
     public function createTournament($data)
     {
         try {
-            $stmt = $this->conn->prepare("INSERT INTO tournaments (name, date, location_id) VALUES (?, ?, ?)");
+            $stmt = $this->conn->prepare("INSERT INTO tournaments (name, date, location_id, organizer_id) VALUES (?, ?, ?, 1)");
             if (!$stmt) {
                 throw new Exception("Prepare failed: " . $this->conn->error);
             }

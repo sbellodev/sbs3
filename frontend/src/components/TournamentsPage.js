@@ -6,7 +6,8 @@ const TournamentsPage = () => {
   const [newTournament, setNewTournament] = useState({ 
     name: '', 
     date: '', 
-    location: '1'
+    location: '1',
+    organizer: '1'
   });
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
@@ -58,7 +59,7 @@ const TournamentsPage = () => {
       }
 
       setSuccess('Tournament created successfully!');
-      setNewTournament({ name: '', date: '', location: '1' });
+      setNewTournament({ name: '', date: '', location: '1', organizer: '1'});
       await fetchTournaments();
     } catch (error) {
       console.error('Error:', error.message);
