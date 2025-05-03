@@ -1,102 +1,101 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import TournamentsPage from './components/TournamentsPage';
+import AuthPage from './components/AuthPage';
 import './App.css';
+import UsersPage from './components/UserPage';
 
 function App() {
-  const [tournaments, setTournaments] = useState([]);
-  const [newTournament, setNewTournament] = useState({
-    name: '',
-    date: '',
-    location: ''
-  });
+  const [currentPage, setCurrentPage] = useState('home');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
 
-  // Fetch tournaments from PHP backend
+  // Check for existing token on initial load
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + '/tournaments')
-      .then(response => response.json())
-      .then(data => setTournaments(data.data))
-      .catch(error => console.error('Error:', error));
+    setIsAuthenticated(true); //TODO: DEV MODE - Fix
+    const token = localStorage.getItem('token');
+    if (token) {
+      // Verify token (in a real app, you'd validate it properly)
+      setIsAuthenticated(true);
+    }
   }, []);
 
-  const handleInputChange = (e) => {
-    setNewTournament({
-      ...newTournament,
-      [e.target.name]: e.target.value
-    });
+  const handleLogin = (token, userData) => {
+    localStorage.setItem('token', token);
+    setUser(userData);
+    setIsAuthenticated(true);
+    setCurrentPage('tournaments');
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    fetch(process.env.REACT_APP_API_URL + '/tournaments', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newTournament)
-    })
-    .then(response => response.json())
-    .then(data => {
-      // Refresh tournament list
-      fetch(process.env.REACT_APP_API_URL + '/tournaments')
-        .then(response => response.json())
-        .then(data => setTournaments(data.data));
-    });
-  };
-
-  const handleDelete = (id) => {
-    fetch(`${process.env.REACT_APP_API_URL}/tournaments?id=${id}`, {
-      method: 'DELETE'
-    })
-    .then(() => {
-      // Remove deleted tournament from state
-      setTournaments(tournaments.filter(t => t.id !== id));
-    });
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    setUser(null);
+    setCurrentPage('home');
   };
 
   return (
-    <div className="App">
-      <h1>SmashBrosSpain Tournaments</h1>
-      
-      {/* Add Tournament Form */}
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          placeholder="Tournament Name"
-          value={newTournament.name}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="date"
-          name="date"
-          value={newTournament.date}
-          onChange={handleInputChange}
-          required
-        />
-        <input
-          type="text"
-          name="location"
-          placeholder="Location"
-          value={newTournament.location}
-          onChange={handleInputChange}
-          required
-        />
-        <button type="submit">Add Tournament</button>
-      </form>
+    <div className="app-container">
+      <nav className="app-nav">
+        <button 
+          className={`nav-btn ${currentPage === 'home' ? 'active' : ''}`}
+          onClick={() => setCurrentPage('home')}
+        >
+          Home
+        </button>
+        
+        {isAuthenticated ? (
+          <>
+            <button 
+              className={`nav-btn ${currentPage === 'tournaments' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('tournaments')}
+            >
+              CRUD Tournaments
+            </button>
+            <button 
+              className={`nav-btn ${currentPage === 'users' ? 'active' : ''}`}
+              onClick={() => setCurrentPage('users')}
+            >
+              CRUD Users
+            </button>
+            <button 
+              className="nav-btn logout-btn"
+              onClick={handleLogout}
+            >
+              Logout ({user?.username})
+            </button>
+          </>
+        ) : (
+          <button 
+            className={`nav-btn ${currentPage === 'login' ? 'active' : ''}`}
+            onClick={() => setCurrentPage('login')}
+          >
+            Login
+          </button>
+        )}
+      </nav>
 
-      {/* Tournaments List */}
-      <div className="tournaments">
-        {tournaments.map(tournament => (
-          <div key={tournament.id} className="tournament">
-            <h3>{tournament.name}</h3>
-            <p>Date: {tournament.date}</p>
-            <p>Location: {tournament.location}</p>
-            <button onClick={() => handleDelete(tournament.id)}>Delete</button>
-          </div>
-        ))}
-      </div>
+      <main className="app-main">
+        {!isAuthenticated && currentPage === 'login' ? (
+          <AuthPage onLogin={handleLogin} />
+        ) : !isAuthenticated ? (
+          <HomePage />
+        ) : currentPage === 'tournaments' ? (
+          <TournamentsPage user={user} />
+        ) : currentPage === 'users' ? (
+          <UsersPage user={user} />
+        ) : (
+          <HomePage />
+        )}
+      </main>
     </div>
   );
 }
+
+const HomePage = () => (
+  <div className="home-page">
+    <h1>Welcome to SmashBrosSpain</h1>
+    <p>Your ultimate source for Smash Bros tournaments in Spain!</p>
+  </div>
+);
 
 export default App;

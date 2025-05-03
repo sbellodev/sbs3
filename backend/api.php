@@ -1,64 +1,61 @@
 <?php
-// Enable debugging
 require_once __DIR__ . '/config/logger.php';
-header("Access-Control-Allow-Origin: http://localhost:3000"); // Your React port
-header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Methods: GET, POST, DELETE, PUT, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Max-Age: 3600");
 header("Content-Type: application/json");
-header("Access-Control-Allow-Origin: *");
 
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    exit;
+}
 
 try {
     require_once __DIR__ . '/config/database.php';
-    require_once __DIR__ . '/models/TournamentModel.php';
 
-    if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    // Route requests
+    $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $path = isset($_GET['path']) ? $_GET['path'] : '';
+
+    if (empty($path)) {
+        echo json_encode(['message' => 'API root - nothing to see here']);
         exit;
     }
 
-    $method = $_SERVER['REQUEST_METHOD'];
-    $model = new TournamentModel();
+    $parts = explode('/', trim($path, '/'));
+    $endpoint = $parts[0] ?? '';
 
-    // GET /tournaments
-    if ($method === 'GET' && isset($_GET['action']) && $_GET['action'] === 'tournaments') {
-        echo json_encode([
-            'success' => true,
-            'data' => $model->getAllTournaments()
-        ]);
-        exit;
+    switch ($endpoint) {
+        case 'auth':
+            require_once __DIR__ . '/controllers/AuthController.php';
+            $controller = new AuthController();
+            break;
+
+        case 'tournaments':
+            // require_once __DIR__ . '/middleware/AuthMiddleware.php';
+            // AuthMiddleware::authenticate();
+            require_once __DIR__ . '/controllers/TournamentController.php';
+            $controller = new TournamentController();
+            break;
+
+        case 'users':
+            // require_once __DIR__ . '/middleware/AuthMiddleware.php';
+            // AuthMiddleware::authenticate();
+            require_once __DIR__ . '/controllers/UserController.php';
+            $controller = new UserController();
+            break;
+
+        default:
+            throw new Exception("Endpoint not found", 404);
     }
 
-    // POST /tournaments
-    if ($method === 'POST' && isset($_GET['action']) && $_GET['action'] === 'tournaments') {
-        $input = json_decode(file_get_contents('php://input'), true);
-        if (!$input)
-            throw new Exception("Invalid JSON input");
-
-        $id = $model->createTournament($input['name'], $input['date'], $input['location']);
-        echo json_encode(['success' => true, 'id' => $id]);
-        exit;
-    }
-
-    // DELETE /tournaments
-    if ($method === 'DELETE' && isset($_GET['action']) && $_GET['action'] === 'tournaments') {
-        $id = $_GET['id'] ?? null;
-        if (!$id)
-            throw new Exception("Missing ID");
-
-        $model->deleteTournament($id);
-        echo json_encode(['success' => true]);
-        exit;
-    }
-
-    throw new Exception("Invalid request");
+    $controller->handleRequest();
 
 } catch (Exception $e) {
-    logError($e->getMessage()); // Log to debug.log
-    http_response_code(400); // Bad request
+    logError($e->getMessage());
+    http_response_code($e->getCode() ?: 400);
     echo json_encode([
         'success' => false,
-        'error' => $e->getMessage() // Output to terminal/frontend
+        'error' => $e->getMessage()
     ]);
 }
-?>

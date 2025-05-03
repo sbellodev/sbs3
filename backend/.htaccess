@@ -1,4 +1,9 @@
 RewriteEngine On
+RewriteBase /sbs3/backend/
+
+# Don't rewrite existing files or directories
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ api.php?action=$1 [QSA,L]
+
+# Rewrite all requests to api.php except root
+RewriteRule ^(.*)$ api.php?path=$1 [QSA,L]
