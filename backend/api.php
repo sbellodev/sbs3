@@ -1,6 +1,19 @@
 <?php
 require_once __DIR__ . '/config/logger.php';
-header("Access-Control-Allow-Origin: http://localhost:3000");
+
+$allowedOrigins = [
+    'http://localhost:3000',
+    'https://sbs3.onrender.com'
+];
+
+// Get the request origin
+$requestOrigin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+// Check if the request origin is in the allowed list
+if (in_array($requestOrigin, $allowedOrigins)) {
+    header("Access-Control-Allow-Origin: " . $requestOrigin);
+}
+
 header("Access-Control-Allow-Methods: GET, POST, DELETE, PUT, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Access-Control-Max-Age: 3600");
