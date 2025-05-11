@@ -1,15 +1,33 @@
 <?php
 
-$dbHost = getenv('DB_HOST') ?: 'db';
-$dbUser = getenv('DB_USER') ?: 'root';
-$dbPass = getenv('DB_PASS') ?: 'rootpassword';
-$dbName = getenv('DB_NAME') ?: 'sbs3';
+// Detect environment based on URL
+$isLocal = isset($_SERVER['HTTP_HOST']) &&
+    (strpos($_SERVER['HTTP_HOST'], 'localhost') !== false ||
+        strpos($_SERVER['HTTP_HOST'], '127.0.0.1') !== false);
 
-// Define constants
-define('DB_HOST', $dbHost);
-define('DB_USER', $dbUser);
-define('DB_PASS', $dbPass);
-define('DB_NAME', $dbName);
+// Set database configuration based on environment
+if ($isLocal) {
+    // Local development configuration
+    $dbHost = 'db';  // Docker service name or localhost
+    $dbUser = 'root';
+    $dbPass = 'rootpassword';
+    $dbName = 'sbs3';
+} else {
+    // Production configuration
+    $dbHost = 'localhost';
+    $dbUser = 'root';  // Use different credentials in production!
+    $dbPass = '';
+    $dbName = 'sbs3';
+}
+
+// Select the appropriate configuration
+$dbConfig = $config[$environment];
+
+// Create connection
+$dbHost = getenv('DB_HOST') ?: $dbConfig['host'];
+$dbUser = getenv('DB_USER') ?: $dbConfig['user'];
+$dbPass = getenv('DB_PASS') ?: $dbConfig['pass'];
+$dbName = getenv('DB_NAME') ?: $dbConfig['name'];
 
 // Database connection with enhanced error handling
 $conn = null;
