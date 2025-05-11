@@ -20,14 +20,11 @@ if ($isLocal) {
     $dbName = 'sbs3';
 }
 
-// Select the appropriate configuration
-$dbConfig = $config[$environment];
 
-// Create connection
-$dbHost = getenv('DB_HOST') ?: $dbConfig['host'];
-$dbUser = getenv('DB_USER') ?: $dbConfig['user'];
-$dbPass = getenv('DB_PASS') ?: $dbConfig['pass'];
-$dbName = getenv('DB_NAME') ?: $dbConfig['name'];
+define('DB_HOST', $dbHost);
+define('DB_USER', $dbUser);
+define('DB_PASS', $dbPass);
+define('DB_NAME', $dbName);
 
 // Database connection with enhanced error handling
 $conn = null;
