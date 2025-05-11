@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { userService } from '../services/UserService';
 import '../App.css';
 
 const UsersPage = () => {
@@ -17,19 +18,15 @@ const UsersPage = () => {
   ];
 
   useEffect(() => { 
-    fetchUsers(); 
+    loadUsers();
   }, []);
 
-  const fetchUsers = async () => {
+  const loadUsers = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/users`);
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const { data } = await response.json();
+      const { data } = await userService.getAllUsers();
       setUsers(data || []);
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error('Error loading users:', error);
       setError(`Failed to load users: ${error.message}`);
     }
   };
@@ -37,7 +34,6 @@ const UsersPage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setNewUser(prev => ({ ...prev, [name]: value }));
-    // Clear errors when user starts typing
     if (error) setError(null);
   };
 
@@ -47,24 +43,12 @@ const UsersPage = () => {
     setSuccess(null);
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/users`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newUser)
-      });
-
-      const result = await response.json();
-      
-      if (!response.ok) {
-        // Handle API validation errors
-        throw new Error(result.error || 'Failed to create user');
-      }
-
+      await userService.createUser(newUser);
       setSuccess('User created successfully!');
       setNewUser({ username: '', email: '', role: 'user' });
-      await fetchUsers();
+      await loadUsers();
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error('Error creating user:', error);
       setError(error.message);
     }
   };
@@ -73,23 +57,15 @@ const UsersPage = () => {
     if (!window.confirm('Are you sure you want to delete this user?')) return;
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/users?id=${id}`, {
-        method: 'DELETE'
-      });
-
-      if (!response.ok) {
-        throw new Error('Delete failed');
-      }
-
+      await userService.deleteUser(id);
       setSuccess('User deleted successfully!');
       setUsers(users.filter(u => u.id !== id));
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error('Error deleting user:', error);
       setError(`Failed to delete user: ${error.message}`);
     }
   };
 
-  // Auto-dismiss messages after 5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setError(null);
@@ -102,7 +78,7 @@ const UsersPage = () => {
     <div className="general-page">
       <h1>Manage Users</h1>
       
-      {/* Success/Error Messages */}
+      {/* Messages */}
       {error && (
         <div className="alert error">
           <span className="close-btn" onClick={() => setError(null)}>&times;</span>

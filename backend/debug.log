@@ -429,3 +429,13 @@ Stack trace:
 #0 /var/www/html/api.php(25): require_once()
 #1 {main}
   thrown in /var/www/html/config/database.php on line 37
+[11-May-2025 11:30:34 UTC] PHP Warning:  Undefined variable $dbHost in /var/www/html/config/database.php on line 24
+[11-May-2025 11:30:34 UTC] PHP Warning:  Undefined variable $dbHost in /var/www/html/config/database.php on line 24
+[11-May-2025 11:30:34 UTC] DATABASE ERROR: No such file or directory
+[11-May-2025 11:30:34 UTC] DATABASE ERROR: No such file or directory
+[11-May-2025 11:36:47 UTC] [ERROR] Field 'password_hash' doesn't have a default value
+[11-May-2025 11:36:47 UTC] [ERROR] Field 'password_hash' doesn't have a default value
+[11-May-2025 11:36:47 UTC] [ERROR] Field 'password_hash' doesn't have a default value
+[11-May-2025 11:36:47 UTC] [ERROR] Field 'password_hash' doesn't have a default value
+[11-May-2025 11:36:54 UTC] [ERROR] Field 'password_hash' doesn't have a default value
+[11-May-2025 11:36:54 UTC] [ERROR] Field 'password_hash' doesn't have a default value

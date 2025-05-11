@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { tournamentService } from '../services/TournamentService';
 import '../App.css';
 
-const TournamentsPage = () => {
+const TournamentPage = () => {
   const [tournaments, setTournaments] = useState([]);
   const [newTournament, setNewTournament] = useState({ 
     name: '', 
@@ -17,19 +18,15 @@ const TournamentsPage = () => {
   ];
 
   useEffect(() => { 
-    fetchTournaments(); 
+    loadTournaments();
   }, []);
 
-  const fetchTournaments = async () => {
+  const loadTournaments = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/tournaments`);
-      if (!response.ok) {
-        throw new Error(`Failed to load tournaments: HTTP ${response.status}`);
-      }
-      const { data } = await response.json();
+      const { data } = await tournamentService.getAllTournaments();
       setTournaments(data || []);
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error('Error loading tournaments:', error);
       setError(error.message);
     }
   };
@@ -46,23 +43,12 @@ const TournamentsPage = () => {
     setSuccess(null);
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/tournaments`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newTournament)
-      });
-
-      const result = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(result.error || 'Failed to create tournament');
-      }
-
+      await tournamentService.createTournament(newTournament);
       setSuccess('Tournament created successfully!');
-      setNewTournament({ name: '', date: '', location: '1', organizer: '1'});
-      await fetchTournaments();
+      setNewTournament({ name: '', date: '', location: '1', organizer: '1' });
+      await loadTournaments();
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error('Error creating tournament:', error);
       setError(error.message);
     }
   };
@@ -71,23 +57,15 @@ const TournamentsPage = () => {
     if (!window.confirm('Are you sure you want to delete this tournament?')) return;
     
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/tournaments?id=${id}`, {
-        method: 'DELETE'
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to delete tournament');
-      }
-
+      await tournamentService.deleteTournament(id);
       setSuccess('Tournament deleted successfully!');
       setTournaments(tournaments.filter(t => t.id !== id));
     } catch (error) {
-      console.error('Error:', error.message);
+      console.error('Error deleting tournament:', error);
       setError(error.message);
     }
   };
 
-  // Auto-dismiss messages after 5 seconds
   useEffect(() => {
     const timer = setTimeout(() => {
       setError(null);
@@ -100,7 +78,7 @@ const TournamentsPage = () => {
     <div className="general-page">
       <h1>Manage Tournaments</h1>
       
-      {/* Success/Error Messages */}
+      {/* Messages */}
       {error && (
         <div className="alert error">
           <span className="close-btn" onClick={() => setError(null)}>&times;</span>
@@ -161,4 +139,4 @@ const TournamentsPage = () => {
   );
 };
 
-export default TournamentsPage;
+export default TournamentPage;

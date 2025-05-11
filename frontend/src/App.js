@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import TournamentsPage from './components/TournamentsPage';
+import TournamentsPage from './components/TournamentPage';
 import TestsPage from './components/TestsPage';
 import AuthPage from './components/AuthPage';
 import './App.css';
