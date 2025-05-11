@@ -26,5 +26,28 @@ services:
       - "8000:80"
     volumes:
       - ./backend:/var/www/html
+      - ./tools/schema_all.sql:/docker-entrypoint-initdb.d/schema_all.sql # Import schema
     environment:
-      - APACHE_DOCUMENT_ROOT=/var/www/html/public # Adjust if your PHP uses a public folder
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+      - DB_HOST=db
+      - DB_NAME=sbs3
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: sbs3
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./tools/schema_all.sql:/docker-entrypoint-initdb.d/schema_all.sql # Import schema
+
+volumes:
+  mysql_data:

@@ -1,13 +1,3 @@
-SET FOREIGN_KEY_CHECKS = 0;
-
-DROP TABLE if exists locations;
-DROP TABLE if exists tournament_participants;
-DROP TABLE if exists tournaments;
-DROP TABLE if exists users;
-
-SET FOREIGN_KEY_CHECKS = 1;
-
-
 -- Users table
 CREATE TABLE users (
 id INT AUTO_INCREMENT PRIMARY KEY,

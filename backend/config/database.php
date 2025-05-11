@@ -1,8 +1,8 @@
 <?php
 
-$dbHost = getenv('DB_HOST') ?: 'localhost';
+$dbHost = getenv('DB_HOST') ?: 'db';
 $dbUser = getenv('DB_USER') ?: 'root';
-$dbPass = getenv('DB_PASS') ?: '';
+$dbPass = getenv('DB_PASS') ?: 'rootpassword';
 $dbName = getenv('DB_NAME') ?: 'sbs3';
 
 // Define constants
