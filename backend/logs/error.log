@@ -1,0 +1,6 @@
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 172.19.0.2. Set the 'ServerName' directive globally to suppress this message
+[Sat May 10 20:19:05.677890 2025] [mpm_prefork:notice] [pid 1:tid 1] AH00163: Apache/2.4.62 (Debian) PHP/8.2.28 configured -- resuming normal operations
+[Sat May 10 20:19:05.678065 2025] [core:notice] [pid 1:tid 1] AH00094: Command line: 'apache2 -D FOREGROUND'
+[Sat May 10 20:20:30.742853 2025] [core:alert] [pid 18:tid 18] [client 172.19.0.1:44266] /var/www/html/.htaccess: Invalid command 'RewriteEngine', perhaps misspelled or defined by a module not included in the server configuration
+[Sat May 10 20:20:30.796893 2025] [core:alert] [pid 19:tid 19] [client 172.19.0.1:44270] /var/www/html/.htaccess: Invalid command 'RewriteEngine', perhaps misspelled or defined by a module not included in the server configuration, referer: http://localhost:8000/
+[Sat May 10 20:21:43.769805 2025] [mpm_prefork:notice] [pid 1:tid 1] AH00170: caught SIGWINCH, shutting down gracefully

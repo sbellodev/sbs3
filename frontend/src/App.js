@@ -102,7 +102,7 @@ function App() {
 
 const HomePage = () => (
   <div className="home-page">
-    <h1>Welcome to SmashBrosSpain</h1>
+    <h1>xxcWsselcome to SmashBrosSpain</h1>
     <p>Your ultimate source for Smash Bros tournaments in Spain!</p>
   </div>
 );

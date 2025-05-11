@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true # Force polling for file changes
+      - WATCHPACK_POLLING=true # Alternative polling option
+      - FAST_REFRESH=false # Sometimes helps with HMR issues
+    stdin_open: true # Required for HMR
+    tty: true # Required for HMR
