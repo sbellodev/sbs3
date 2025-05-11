@@ -263,3 +263,43 @@ Stack trace:
 #3 C:\Users\Sanity\Documents\GitHub\sbs3\backend\api.php(75): AuthController->handleRequest()
 #4 {main}
   thrown in C:\Users\Sanity\Documents\GitHub\sbs3\backend\models\UserModel.php on line 22
+[11-May-2025 10:05:41 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /var/www/html/config/database.php:19
+Stack trace:
+#0 /var/www/html/api.php(25): require_once()
+#1 {main}
+  thrown in /var/www/html/config/database.php on line 19
+[11-May-2025 10:05:41 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /var/www/html/config/database.php:19
+Stack trace:
+#0 /var/www/html/api.php(25): require_once()
+#1 {main}
+  thrown in /var/www/html/config/database.php on line 19
+[11-May-2025 10:05:43 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /var/www/html/config/database.php:19
+Stack trace:
+#0 /var/www/html/api.php(25): require_once()
+#1 {main}
+  thrown in /var/www/html/config/database.php on line 19
+[11-May-2025 10:05:43 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /var/www/html/config/database.php:19
+Stack trace:
+#0 /var/www/html/api.php(25): require_once()
+#1 {main}
+  thrown in /var/www/html/config/database.php on line 19
+[11-May-2025 10:05:57 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /var/www/html/config/database.php:19
+Stack trace:
+#0 /var/www/html/api.php(25): require_once()
+#1 {main}
+  thrown in /var/www/html/config/database.php on line 19
+[11-May-2025 10:05:57 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /var/www/html/config/database.php:19
+Stack trace:
+#0 /var/www/html/api.php(25): require_once()
+#1 {main}
+  thrown in /var/www/html/config/database.php on line 19
+[11-May-2025 10:06:21 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /var/www/html/config/database.php:19
+Stack trace:
+#0 /var/www/html/api.php(25): require_once()
+#1 {main}
+  thrown in /var/www/html/config/database.php on line 19
+[11-May-2025 10:06:21 UTC] PHP Fatal error:  Uncaught Error: Class "mysqli" not found in /var/www/html/config/database.php:19
+Stack trace:
+#0 /var/www/html/api.php(25): require_once()
+#1 {main}
+  thrown in /var/www/html/config/database.php on line 19
