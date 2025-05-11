@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=sbs3
+      - DB_USER=root
+      - DB_PASSWORD=rootpassword
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: sbs3
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./tools/schema_all.sql:/docker-entrypoint-initdb.d/schema.sql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-prootpassword" ]
+      interval: 5s
+      timeout: 2s
+      retries: 10
+
+volumes:
+  mysql_data:
